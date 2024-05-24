@@ -1,0 +1,36 @@
+SELECT * FROM film;
+
+SELECT rating, COUNT(*) num_films FROM film
+GROUP BY rating;
+
+SELECT rating, title, rental_rate, length FROM film
+WHERE rating IN ('G', 'PG-13') and length < 120 and rental_rate < 3.00
+ORDER BY title;
+
+UPDATE customer
+SET 
+    first_name = 'Maria',
+    last_name = 'Inger',
+    email = 'my_email@gmail.com'
+WHERE customer_id = 1;
+
+SELECT first_name, last_name, customer_id FROM customer
+WHERE customer_id = 1;
+
+
+UPDATE address AS a
+SET 
+ 	address = '221B Baker Street',
+    district = 'Marylebone',
+    city_id = 500,
+	postal_code = 'NW1 6XE',    
+	phone = 'N/A'
+FROM customer AS c
+WHERE c.customer_id = 1 AND c.address_id = a.address_id;
+
+SELECT *
+FROM address AS a
+JOIN customer AS c ON a.address_id = c.address_id
+WHERE c.customer_id = 1;
+
+
