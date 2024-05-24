@@ -1,0 +1,34 @@
+SELECT * FROM public.actors
+ORDER BY actor_id ASC; 
+INSERT INTO actors (first_name, last_name, age, number_oscars)
+VALUES('Ell','Vuds','08/11/1971', 9);
+
+INSERT INTO actors (first_name, last_name, age, number_oscars)
+VALUES('Kris','Pratt','16/02/1961', 2);
+
+SELECT first_name, last_name, age, COUNT(*)
+FROM public.actors
+GROUP BY first_name, last_name, age
+HAVING COUNT(*) > 1;
+WITH DuplicateActors AS (
+    SELECT actor_id,
+           ROW_NUMBER() OVER (PARTITION BY first_name, last_name, age ORDER BY actor_id) AS rnum
+    FROM public.actors
+)
+DELETE FROM public.actors
+WHERE actor_id IN (
+    SELECT actor_id
+    FROM DuplicateActors
+    WHERE rnum > 1
+);
+---Count how many actors are in the table.
+SELECT COUNT(*) AS actor_count
+FROM public.actors;
+---2. Try to add a new actor with some blank fields. 
+---What do you think the outcome will be ? - output error
+---INSERT INTO public.actors (first_name, last_name, age, number_oscars)
+---VALUES ('Jane', 'Doe', NULL, 1);
+---
+
+
+SELECT * FROM actors 
