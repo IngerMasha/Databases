@@ -1,0 +1,55 @@
+select s.store_id, a.address, c.city, co.country 
+from store s
+join address a on s.address_id = a.address_id
+join city c on a.city_id = c.city_id
+join country co on c.country_id = co.country_id
+group by c.city, co.country, s.store_id, a.address;
+
+SELECT COUNT(store_id) AS store_count, city, country
+FROM store s
+JOIN address a ON s.address_id = a.address_id
+JOIN city c ON a.city_id = c.city_id
+JOIN country co ON c.country_id = co.country_id
+GROUP BY city, country;
+
+SELECT s.store_id, SUM(f.length) AS total_length_minutes
+FROM inventory i
+JOIN film f ON i.film_id = f.film_id
+JOIN rental r ON i.inventory_id = r.inventory_id
+JOIN store s ON i.store_id = s.store_id
+WHERE r.return_date IS NOT NULL
+GROUP BY s.store_id;
+
+---This task #5 and #4 doesn’t work, I couldn’t find the reason
+-- select distinct c.customer_id, c.first_name, c.last_name, ci.city
+-- from customer c
+-- join address a on c.address_id = a.address_id
+-- join city ci on a.city_id=ci.city_id
+-- join store s on s.address_id = a.address_id;
+
+-- select distinct c.customer_id, c.first_name, c.last_name
+-- from customer c
+-- join address a on c.address_id = a.address_id
+-- join city ci on a.city_id = ci.city_id
+-- join country co on ci.country_id = co.country_id
+-- join store s on s.address_id = a.address_id;
+
+select * from safe_movie_list;
+
+SELECT SUM(length) AS total_length_minutes_films
+FROM film;
+
+SELECT SUM(length_minutes) AS total_length_minutes_safe_movie_list
+FROM safe_movie_list;
+
+SELECT 
+    SUM(length) AS total_length_minutes,
+    EXTRACT(HOUR FROM INTERVAL '1 minute' * SUM(length)) AS total_length_hours,
+    SUM(length) / 60 / 24 AS total_length_days_film
+FROM film;
+
+SELECT 
+    SUM(length_minutes) AS total_length_minutes,
+    EXTRACT(HOUR FROM INTERVAL '1 minute' * SUM(length_minutes)) AS total_length_hours,
+    SUM(length_minutes) / 60 / 24 AS total_length_days_safe
+FROM safe_movie_list;
