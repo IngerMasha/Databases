@@ -1,0 +1,61 @@
+CREATE TABLE IF NOT EXISTS purchases (
+    id SERIAL PRIMARY KEY,
+    customer_id INT REFERENCES customers(customer_id),
+    item_id INT REFERENCES items(item_id),
+    quantity_purchased INT NOT NULL
+);
+
+INSERT INTO purchases (customer_id, item_id, quantity_purchased)
+VALUES (
+    (SELECT customer_id FROM customers WHERE first_name = 'Scott' AND last_name = 'Scott'),
+    (SELECT item_id FROM items WHERE item_name = 'Fan'),
+    1
+);
+INSERT INTO purchases (customer_id, item_id, quantity_purchased)
+VALUES (
+    (SELECT customer_id FROM customers WHERE first_name = 'Melanie' AND last_name = 'Johnson'),
+    (SELECT item_id FROM items WHERE item_name = 'Large Desk'),
+    10
+);
+INSERT INTO purchases (customer_id, item_id, quantity_purchased)
+VALUES (
+    (SELECT customer_id FROM customers WHERE first_name = 'Greg' AND last_name = 'Jones'),
+    (SELECT item_id FROM items WHERE item_name = 'Small Desk'),
+    2
+);
+
+SELECT * FROM purchases;
+
+SELECT p.*, c.first_name||' '||c.last_name AS customer_name FROM purchases p
+JOIN customers c ON p.customer_id = c.customer_id;
+
+SELECT * FROM purchases 
+WHERE customer_id = 5;
+
+SELECT p.*, 
+       (SELECT item_name FROM items WHERE item_id = p.item_id) AS item_name 
+FROM purchases p 
+WHERE p.item_id IN (SELECT item_id FROM items WHERE item_name = 'Large Desk') 
+  OR p.item_id IN (SELECT item_id FROM items WHERE item_name = 'Small Desk');
+---removing duplicates
+SELECT customer_id, item_id, quantity_purchased, COUNT(*)
+FROM public.purchases
+GROUP BY customer_id, item_id, quantity_purchased
+HAVING COUNT(*) > 1;
+
+WITH DuplicatePurchases AS (
+    SELECT id,
+           ROW_NUMBER() OVER (PARTITION BY customer_id, item_id, quantity_purchased ORDER BY id) AS rnum
+    FROM public.purchases
+)
+DELETE FROM public.purchases
+WHERE id IN (
+    SELECT id
+    FROM DuplicatePurchases
+    WHERE rnum > 1
+);
+---end removing duplicates
+SELECT c.first_name, c.last_name, i.item_name
+FROM customers c
+JOIN purchases p ON c.customer_id = p.customer_id
+JOIN items i ON p.item_id = i.item_id;
