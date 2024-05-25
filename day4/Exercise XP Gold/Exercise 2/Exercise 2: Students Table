@@ -1,0 +1,35 @@
+SELECT * FROM students;
+
+UPDATE students
+SET birth_date = '1998-02-11'
+WHERE (first_name = 'Lea' AND last_name = 'Benichou')
+   OR (first_name = 'Marc' AND last_name = 'Benichou');
+
+SELECT * FROM students
+WHERE last_name = 'Benichou';
+
+UPDATE students
+SET last_name = 'Guez'
+WHERE first_name = 'David' AND last_name = 'Grez';
+
+SELECT * FROM students
+WHERE last_name = 'Guez';
+
+DELETE FROM students
+WHERE first_name = 'Lea' AND last_name = 'Benichou';
+
+SELECT * FROM students
+WHERE last_name = 'Benichou';
+
+-- ALTER TABLE student
+-- DROP COLUMN math_grade;
+
+SELECT * FROM students
+WHERE last_name = 'Benichou';
+
+ALTER TABLE students
+ADD COLUMN math_grade INTEGER;
+
+SELECT * FROM students
+WHERE id = 1; 
+ 
