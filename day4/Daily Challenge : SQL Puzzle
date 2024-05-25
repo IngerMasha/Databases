@@ -1,0 +1,22 @@
+SELECT COUNT(*) 
+FROM FirstTab AS ft 
+WHERE ft.id NOT IN ( SELECT id FROM SecondTab WHERE id IS NULL );
+--- I thought there would be 3 results, actually 0
+
+SELECT COUNT(*) 
+FROM FirstTab AS ft WHERE ft.id NOT IN ( SELECT id FROM SecondTab WHERE id = 5 );
+---3 rows exept id=5?, actually 2
+
+SELECT COUNT(*) 
+FROM FirstTab AS ft WHERE ft.id NOT IN ( SELECT id FROM SecondTab );
+---2 - 6   Sharlee and 7   Krish, actually 0.
+---here i undestand that comparison with NULL returns undefined result
+
+SELECT COUNT(*) 
+FROM FirstTab AS ft WHERE ft.id NOT IN ( SELECT id FROM SecondTab WHERE id IS NOT NULL );
+------2 - 6   Sharlee and 7   Krish. 
+---because in SecondTab not null is 5 and not 5 is 6,7, and the NULL from FirstTab, but we can't compare with NULL, so it is just 6 and 7.
+
+
+
+
