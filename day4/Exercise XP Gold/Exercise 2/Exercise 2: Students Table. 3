@@ -1,0 +1,18 @@
+SELECT first_name, last_name, birth_date, COUNT(*)
+FROM public.students
+GROUP BY first_name, last_name, birth_date
+HAVING COUNT(*) > 1;
+
+WITH DuplicateStudents AS (
+    SELECT id,
+           ROW_NUMBER() OVER (PARTITION BY first_name, last_name, birth_date ORDER BY id) AS rnum
+    FROM public.students
+)
+DELETE FROM public.students
+WHERE id IN (
+    SELECT id
+    FROM DuplicateStudents
+    WHERE rnum > 1
+);
+
+SELECT * FROM public.students;
