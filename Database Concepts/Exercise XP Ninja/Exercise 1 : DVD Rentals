@@ -1,0 +1,27 @@
+
+SELECT DISTINCT f.film_id, f.title, f.rating
+FROM film f
+JOIN inventory i ON f.film_id = i.film_id
+LEFT JOIN rental r ON i.inventory_id = r.inventory_id
+WHERE f.rating IN ('G', 'PG')
+AND (r.rental_id IS NULL OR r.return_date IS NOT NULL)
+ORDER BY f.film_id;
+
+
+CREATE TABLE if not exists children_waiting_list (
+    waiting_id SERIAL PRIMARY KEY,
+    film_id INT REFERENCES film(film_id),
+    child_name VARCHAR(255),
+    date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    date_removed TIMESTAMP
+);
+INSERT INTO children_waiting_list (film_id, child_name)
+VALUES (2, 'Bob'),
+       (2, 'Charlie');
+INSERT INTO children_waiting_list (film_id, child_name)
+VALUES (1, 'Alice');
+
+SELECT film_id, COUNT(*) AS num_waiting
+FROM children_waiting_list
+GROUP BY film_id;
+
