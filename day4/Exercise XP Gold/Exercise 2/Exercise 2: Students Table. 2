@@ -1,0 +1,34 @@
+UPDATE students
+SET math_grade =  80
+WHERE id = 1;
+
+UPDATE students
+SET math_grade =  90
+WHERE id IN (2, 4);
+
+UPDATE students
+SET math_grade = 40
+WHERE id = 6;
+
+SELECT id, first_name || ' '|| last_name AS name, math_grade FROM students
+WHERE id in(1,2,4,6);
+
+SELECT COUNT(*) AS num_students
+FROM students
+WHERE math_grade > 83;
+
+INSERT  INTO students (first_name, last_name, birth_date, math_grade)
+VALUES ('Omer', 'Simpson', '1980-10-03', 70);
+
+SELECT * FROM students
+WHERE first_name = 'Omer';
+
+SELECT first_name, last_name, COUNT(math_grade) AS total_grades
+FROM students
+GROUP BY first_name, last_name;
+
+SELECT SUM(math_grade) AS total_grades_sum
+FROM students;
+
+
+SELECT * FROM students;
